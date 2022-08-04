@@ -22,7 +22,7 @@
  */
 package org.openjdk.jextract.test.toolprovider;
 
-import java.lang.foreign.MemoryAddress;
+
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.MemorySession;
@@ -53,20 +53,20 @@ public class TestClassGeneration extends JextractToolRunner {
     @DataProvider
     public static Object[][] simpleConstants() {
         return new Object[][]{
-            { "macro_byte",         byte.class,   (byte) 1                         },
-            { "macro_short",        short.class, (short) 1                         },
-            { "macro_int",          int.class,           1                         },
-            { "macro_long",         long.class,          1L                        },
-            { "macro_float",        float.class,         1.0F                      },
-            { "macro_double",       double.class,        1.0D                      },
-            { "macro_address_NULL", MemoryAddress.class, MemoryAddress.NULL        },
-            { "macro_address_123",  MemoryAddress.class, MemoryAddress.ofLong(123) },
-            { "enum_0",             int.class,           0                         },
-            { "enum_1",             int.class,           1                         },
-            { "enum_2",             int.class,           2                         },
-            { "enum_anon_0",        int.class,           0                         },
-            { "enum_anon_1",        int.class,           1                         },
-            { "enum_anon_2",        int.class,           2                         },
+            { "macro_byte",         byte.class,   (byte) 1                            },
+            { "macro_short",        short.class, (short) 1                            },
+            { "macro_int",          int.class,           1                            },
+            { "macro_long",         long.class,          1L                           },
+            { "macro_float",        float.class,         1.0F                         },
+            { "macro_double",       double.class,        1.0D                         },
+            { "macro_address_NULL", MemorySegment.class, MemorySegment.NULL           },
+            { "macro_address_123",  MemorySegment.class, MemorySegment.ofAddress(123) },
+            { "enum_0",             int.class,           0                            },
+            { "enum_1",             int.class,           1                            },
+            { "enum_2",             int.class,           2                            },
+            { "enum_anon_0",        int.class,           0                            },
+            { "enum_anon_1",        int.class,           1                            },
+            { "enum_anon_2",        int.class,           2                            },
         };
     }
 

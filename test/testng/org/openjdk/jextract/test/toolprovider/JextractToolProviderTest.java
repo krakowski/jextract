@@ -22,11 +22,12 @@
  */
 package org.openjdk.jextract.test.toolprovider;
 
-import java.lang.foreign.Addressable;
+
 import testlib.TestUtils;
 import org.testng.annotations.Test;
 import testlib.JextractToolRunner;
 
+import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -113,7 +114,7 @@ public class JextractToolProviderTest extends JextractToolRunner {
             // check a method for "void func(int)"
             assertNotNull(findMethod(cls, "func", int.class));
             // check a method for "int printf(MemoryAddress, Object[])"
-            assertNotNull(findMethod(cls, "printf", Addressable.class, Object[].class));
+            assertNotNull(findMethod(cls, "printf", MemorySegment.class, Object[].class));
         } finally {
             TestUtils.deleteDir(helloOutput);
         }
@@ -143,7 +144,7 @@ public class JextractToolProviderTest extends JextractToolRunner {
             // check a method for "void func(int)"
             assertNotNull(findMethod(cls, "func", int.class));
             // check a method for "int printf(MemoryAddress, Object[])"
-            assertNotNull(findMethod(cls, "printf", Addressable.class, Object[].class));
+            assertNotNull(findMethod(cls, "printf", MemorySegment.class, Object[].class));
         } finally {
             TestUtils.deleteDir(helloOutput);
         }
@@ -170,7 +171,7 @@ public class JextractToolProviderTest extends JextractToolRunner {
             // check a method for "void func(int)"
             assertNotNull(findMethod(cls, "func", int.class));
             // check a method for "int printf(MemoryAddress, Object[])"
-            assertNotNull(findMethod(cls, "printf", Addressable.class, Object[].class));
+            assertNotNull(findMethod(cls, "printf", MemorySegment.class, Object[].class));
         } finally {
             TestUtils.deleteDir(helloOutput);
         }

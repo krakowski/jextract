@@ -33,9 +33,5 @@ union MemorySegment {
    int x; float f;
 };
 
-union MemoryAddress {
-   long l; double d;
-};
-
 typedef long MemoryLayout;
 typedef double ValueLayout;

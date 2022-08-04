@@ -21,12 +21,10 @@
  * questions.
  */
 
+import java.lang.foreign.*;
 import java.lang.reflect.Method;
-import java.lang.foreign.GroupLayout;
-import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemoryLayout.PathElement;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.MemorySession;
+
 import org.testng.annotations.Test;
 
 import test.jextract.unsupported.unsupported_h;
@@ -64,8 +62,9 @@ public class LibUnsupportedTest {
 
     @Test
     public void testGetFoo() {
+        var allocator = SegmentAllocator.implicitAllocator();
         try (MemorySession session = MemorySession.openConfined()) {
-            var seg = MemorySegment.ofAddress(getFoo(), Foo.sizeof(), session);
+            var seg = MemorySegment.ofAddress(getFoo(allocator).address(), Foo.sizeof(), session);
             Foo.i$set(seg, 42);
             Foo.c$set(seg, (byte)'j');
             assertEquals(Foo.i$get(seg), 42);
