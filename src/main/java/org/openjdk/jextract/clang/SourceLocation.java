@@ -25,8 +25,6 @@
  */
 package org.openjdk.jextract.clang;
 
-import java.lang.foreign.Addressable;
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.MemorySession;
 import org.openjdk.jextract.clang.libclang.Index_h;
@@ -50,8 +48,8 @@ public class SourceLocation extends ClangDisposable.Owned {
 
     @FunctionalInterface
     private interface LocationFactory {
-        void get(MemorySegment loc, Addressable file,
-                 Addressable line, Addressable column, Addressable offset);
+        void get(MemorySegment loc, MemorySegment file,
+                 MemorySegment line, MemorySegment column, MemorySegment offset);
     }
 
     @SuppressWarnings("unchecked")
@@ -63,15 +61,15 @@ public class SourceLocation extends ClangDisposable.Owned {
              MemorySegment offset = MemorySegment.allocateNative(C_INT, session);
 
             fn.get(loc, file, line, col, offset);
-            MemoryAddress fname = file.get(C_POINTER, 0);
-            String str = fname == MemoryAddress.NULL ?  null : getFileName(fname);
+            MemorySegment fname = file.get(C_POINTER, 0);
+            String str = fname.equals(MemorySegment.NULL) ?  null : getFileName(fname);
 
             return new Location(str, line.get(C_INT, 0),
                 col.get(C_INT, 0), offset.get(C_INT, 0));
         }
     }
 
-    private static String getFileName(MemoryAddress fname) {
+    private static String getFileName(MemorySegment fname) {
         var filename = Index_h.clang_getFileName(STRING_ALLOCATOR, fname);
         return LibClang.CXStrToString(filename);
     }

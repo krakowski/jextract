@@ -27,7 +27,6 @@ package org.openjdk.jextract.impl;
 import java.lang.foreign.Linker;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.GroupLayout;
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.MemorySession;
@@ -96,14 +95,14 @@ abstract class HeaderFileBuilder extends ClassSourceBuilder {
         emitWithConstantClass(constantBuilder -> {
             Constant mhConstant = constantBuilder.addMethodHandle(javaName, nativeName, descriptor, isVarargs, false)
                     .emitGetter(this, MEMBER_MODS, Constant.QUALIFIED_NAME, nativeName);
-            MethodType downcallType = Linker.downcallType(descriptor);
+            MethodType downcallType = Linker.methodType(descriptor);
             emitFunctionWrapper(mhConstant, javaName, nativeName, downcallType, isVarargs, parameterNames);
         });
     }
 
     @Override
     public void addConstant(String javaName, Class<?> type, Object value) {
-        if (type.equals(MemorySegment.class) || type.equals(MemoryAddress.class)) {
+        if (type.equals(MemorySegment.class) || type.equals(MemorySegment.class)) {
             emitWithConstantClass(constantBuilder -> {
                 constantBuilder.addConstantDesc(javaName, type, value)
                         .emitGetter(this, MEMBER_MODS, Constant.JAVA_NAME);

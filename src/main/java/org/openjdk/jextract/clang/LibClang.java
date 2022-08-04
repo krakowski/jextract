@@ -25,10 +25,8 @@
  */
 package org.openjdk.jextract.clang;
 
-import java.lang.foreign.Addressable;
 import java.lang.foreign.Linker;
 import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.MemorySession;
 import java.lang.foreign.SegmentAllocator;
@@ -59,7 +57,7 @@ public class LibClang {
                 String putenv = IS_WINDOWS ? "_putenv" : "putenv";
                 MethodHandle PUT_ENV = linker.downcallHandle(linker.defaultLookup().lookup(putenv).get(),
                                 FunctionDescriptor.of(C_INT, C_POINTER));
-                int res = (int) PUT_ENV.invokeExact((Addressable)disableCrashRecovery);
+                int res = (int) PUT_ENV.invokeExact((MemorySegment)disableCrashRecovery);
             } catch (Throwable ex) {
                 throw new ExceptionInInitializerError(ex);
             }
@@ -75,7 +73,7 @@ public class LibClang {
     }
 
     public static String CXStrToString(MemorySegment cxstr) {
-        MemoryAddress buf = Index_h.clang_getCString(cxstr);
+        MemorySegment buf = Index_h.clang_getCString(cxstr);
         String str = buf.getUtf8String(0);
         Index_h.clang_disposeString(cxstr);
         return str;

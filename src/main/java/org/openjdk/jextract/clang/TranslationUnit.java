@@ -26,7 +26,6 @@
 
 package org.openjdk.jextract.clang;
 
-import java.lang.foreign.MemoryAddress;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.MemorySession;
@@ -47,7 +46,7 @@ import static org.openjdk.jextract.clang.libclang.Index_h.C_POINTER;
 public class TranslationUnit extends ClangDisposable {
     private static final int MAX_RETRIES = 10;
 
-    TranslationUnit(MemoryAddress addr) {
+    TranslationUnit(MemorySegment addr) {
         super(addr, () -> Index_h.clang_disposeTranslationUnit(addr));
     }
 
@@ -71,7 +70,7 @@ public class TranslationUnit extends ClangDisposable {
         Objects.requireNonNull(dh);
         int cntDiags = Index_h.clang_getNumDiagnostics(ptr);
         for (int i = 0; i < cntDiags; i++) {
-            MemoryAddress diag = Index_h.clang_getDiagnostic(ptr, i);
+            MemorySegment diag = Index_h.clang_getDiagnostic(ptr, i);
             dh.accept(new Diagnostic(diag));
         }
     }
@@ -98,7 +97,7 @@ public class TranslationUnit extends ClangDisposable {
                 code = ErrorCode.valueOf(Index_h.clang_reparseTranslationUnit(
                         ptr,
                         inMemoryFiles.length,
-                        files == null ? MemoryAddress.NULL : files,
+                        files == null ? MemorySegment.NULL : files,
                         Index_h.clang_defaultReparseOptions(ptr)));
             } while(code == ErrorCode.Crashed && (++tries) < MAX_RETRIES); // this call can crash on Windows. Retry in that case.
 
@@ -136,7 +135,7 @@ public class TranslationUnit extends ClangDisposable {
     public class Tokens extends ClangDisposable {
         private final int size;
 
-        Tokens(MemoryAddress addr, int size) {
+        Tokens(MemorySegment addr, int size) {
             super(addr, size * CXToken.$LAYOUT().byteSize(),
                     () -> Index_h.clang_disposeTokens(TranslationUnit.this.ptr, addr, size));
             this.size = size;
